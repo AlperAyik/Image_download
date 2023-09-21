@@ -1,17 +1,14 @@
 <?php
-//if download button clicked
 if(isset($_POST['downloadBtn'])){
-    //getting the user img url from input field
-    $imgURL = $_POST['file']; //storing in variable
-    $regPattern = '/\.(jpe?g|png|gif|bmp)$/i'; //pattern to validataing img extension
-    if(preg_match($regPattern, $imgURL)){ //if pattern matched to user img url
-        $initCURL = curl_init($imgURL); //intializing curl
+    $imgURL = $_POST['file'];
+    $regPattern = '/\.(jpe?g|png|gif|bmp)$/i';
+    if(preg_match($regPattern, $imgURL)){
+        $initCURL = curl_init($imgURL);
         curl_setopt($initCURL, CURLOPT_RETURNTRANSFER, true);
-        $downloadImgLink = curl_exec($initCURL); //executing curl
-        curl_close($initCURL); //closing curl
-        // now we convert the base 64 format to jpg to download
-        header('Content-type: image/jpg'); //in which extension you want to save img
-        header('Content-Disposition: attachment;filename="image.jpg"'); //in which name you want to save img
+        $downloadImgLink = curl_exec($initCURL); 
+        curl_close($initCURL);
+        header('Content-type: image/jpg');
+        header('Content-Disposition: attachment;filename="image.jpg"');
         echo $downloadImgLink;
     }
 }
@@ -43,30 +40,25 @@ if(isset($_POST['downloadBtn'])){
 
     <script>
         $(document).ready(function(){
-            //if user focus out from the input field
             $("#field").on("focusout", function(){
-                //getting user entered img URL
                 var imgURL = $("#field").val();
-                if(imgURL != ""){ //if input field isn't blank
-                    var regPattern = /\.(jpe?g|png|gif|bmp)$/i; //pattern to validataing img extension
-                    if(regPattern.test(imgURL)){ //if pattern matched to image url
-                        var imgTag = '<img src="'+ imgURL +'" alt="">'; //creating a new img tag to show img
-                        $(".img-preview").append(imgTag); //appending img tag with user entered img url
-                        // adding new class which i've created in css
+                if(imgURL != ""){
+                    var regPattern = /\.(jpe?g|png|gif|bmp)$/i;
+                    if(regPattern.test(imgURL)){
+                        var imgTag = '<img src="'+ imgURL +'" alt="">';
+                        $(".img-preview").append(imgTag);
                         $(".preview-box").addClass("imgActive");
                         $("#button").addClass("active");
                         $("#field").addClass("disabled");
                         $(".cancel-icon").on("click", function(){
-                            //we'll remove all new added class on cancel icon click
                             $(".preview-box").removeClass("imgActive");
                             $("#button").removeClass("active");
                             $("#field").removeClass("disabled");
                             $(".img-preview img").remove();
-                            // that's all in javascript/jquery now the main part is PHP
                         });
                     }else{
                         alert("Invalid img URL - " + imgURL);
-                        $("#field").val('');//if pattern not matched we'll leave the input field blank
+                        $("#field").val('');
                     }
                 }
             });
